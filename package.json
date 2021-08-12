@@ -1,0 +1,15 @@
+{
+  "name": "sho-search-interface",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@github.com:ohtapan/sho-search-interface.git",
+  "author": "ohtapan <ohtapan@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build src/index.html",
+    "start": "parcel serve src/index.html"
+  },
+  "dependencies": {
+    "hyperapp": "^2.0.18"
+  }
+}
