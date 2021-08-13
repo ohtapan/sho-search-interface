@@ -1,7 +1,10 @@
-import { h, app } from 'hyperapp';
+import {h, text, app} from "hyperapp"
 
 app({
-  container: document.getElementById('app'),
-  init: 'World',
-  view: message => <div>Hello {message} !</div>,
-});
+  view: () => h("main", {}, [
+    h("div", {class: "person"}, [
+      h("p", {}, text("Hello world")),
+    ]),
+  ]),
+  node: document.getElementById("app"),
+})
