@@ -1,0 +1,1 @@
+{"mappings":"AAAA,KACA,qBACA,CACA,iBAGA,kBACA","sources":["src/index.css"],"sourcesContent":["html {\r\n  box-sizing: border-box;\r\n}\r\n*,\r\n*:before,\r\n*:after {\r\n  box-sizing: inherit;\r\n}\r\n"],"names":[],"version":3,"file":"index.8c72af51.css.map"}
