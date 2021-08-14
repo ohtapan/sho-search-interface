@@ -10,8 +10,8 @@
     "app": {}
   },
   "scripts": {
-    "build": "parcel build",
-    "start": "parcel serve"
+    "build": "parcel build --public-url ./",
+    "start": "parcel serve --open"
   },
   "dependencies": {
     "hyperapp": "^2.0.18",

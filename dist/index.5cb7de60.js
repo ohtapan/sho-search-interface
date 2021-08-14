@@ -463,7 +463,7 @@ _hyperapp.app({
                 class: "person"
             }, [
                 _hyperapp.h("p", {
-                }, _hyperapp.text("Hello world")), 
+                }, _hyperapp.text("Hello mei chan")), 
             ]), 
         ])
     ,
