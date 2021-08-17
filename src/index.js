@@ -13,21 +13,19 @@ const GetShoList = state => [
         word: GetQ(state).q
       })
     },
-    action: (state, content) => {
-      return{ ...state, fetching: false, sholist: content}
-    },
-    error: (state, error) => ({ ...state, fetching: false, sholist: "error"}),
+    action: (state, content) => ({ ...state, fetching: false, sholist: content}),
+    error: (state, error) => ({ ...state, fetching: false, error: error}),
   }),
 ]
 
 const GetQ = state => {
-  let q = new Object;
+  let arg = new Object;
   var pair=location.search.substring(1).split('&');
   for(var i=0;pair[i];i++) {
     var kv = pair[i].split('=');
-    q[kv[0]]=kv[1];
+    arg[kv[0]]=kv[1];
   }
-  return {...state, q: decodeURI(q.q)};
+  return {...state, q: 'q' in arg && decodeURI(arg.q)};
 }
 
 // --- VIEW CONPONENTS ---
@@ -56,17 +54,32 @@ const ShoList = props =>
     ...props.sholist.map(sho => JSON.parse(JSON.stringify(sho))).map( sho => ShoItem({
       name: sho.name,
       similarity: sho.similarity,
-      symptoms: sho.symptoms
+      symptoms: sho.symptoms,
+      q: null,
+      error: null,
     })),
   ])
 
+// --- APP COMPONENTS ---
+
+const init = () => [
+  {q: "",sholist: [],fetching:false},
+  
+]
+
+
 app({
   init: GetShoList({q: "",sholist: [],fetching:false}),
+  //init: init,
   view: state => 
   h("main", {}, [
     h("h1", {}, text("証検索インターフェース")),
     SearchForm(state),
-    state.fetching ? h("h1", {}, text("loading")) : state.sholist && ShoList(state)
+    state.fetching ? 
+      h("h1", {}, text("loading")) : 
+      state.error ? 
+        h("h1", {}, text(state.error)) : 
+        state.sholist && ShoList(state)
   ]),
   node: document.body,
 })
