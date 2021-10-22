@@ -34,7 +34,31 @@ const ShoItem = props =>
   h("div", {}, [
     h('li', {}, [
       h("h2", {}, text(props.name)),
-      h("p", {}, text(props.symptoms))
+      h("p", {}, text(props.description)),
+      h("details", {}, [
+        h("summary", {}, text("詳細")),
+        h("p", {}, [
+          h("b", {}, text("症状：")),
+          text(props.symptoms),
+        ]),
+        h("p", {}, [
+          h("b", {}, text("証が現れる部位：")),
+          text(props.region),
+        ]),
+        h("p", {}, [
+          h("b", {}, text("主な薬物：")),
+          text(props.crude_drags),
+        ]),
+        h("p", {}, [
+          h("b", {}, text("方剤例：")),
+          text(props.prescriptions),
+        ]),
+        h("p", {}, [
+          h("b", {}, text("治療法：")),
+          text(props.treatment),
+        ]),
+      ]),
+      h("p", {}, h("font", {color: "gray"}, text("出典： " + props.references)))
     ]),
     
   ])
@@ -54,7 +78,13 @@ const ShoList = props =>
     ...props.sholist.map(sho => JSON.parse(JSON.stringify(sho))).map( sho => ShoItem({
       name: sho.name,
       similarity: sho.similarity,
+      description: sho.description,
       symptoms: sho.symptoms,
+      region: sho.region,
+      crude_drags: sho.crude_drags,
+      prescriptions: sho.prescriptions,
+      treatment: sho.treatment,
+      references: sho.references,
       q: null,
       error: null,
     })),
@@ -62,15 +92,8 @@ const ShoList = props =>
 
 // --- APP COMPONENTS ---
 
-const init = () => [
-  {q: "",sholist: [],fetching:false},
-  
-]
-
-
 app({
   init: GetShoList({q: "",sholist: [],fetching:false}),
-  //init: init,
   view: state => 
   h("main", {}, [
     h("h1", {}, text("証検索インターフェース")),
