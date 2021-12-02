@@ -21,66 +21,87 @@ const FetchSearch = state => [
         word: state.value
       })
     },
-    action: (state, content) => ({ ...state, fetching: false, sholist: content}),
+    action: (state, content) => ({ ...state, fetching: false, sholist: content, error:false}),
     error: (state, error) => ({ ...state, fetching: false, error: error}),
   }),
 ]
 // --- VIEW CONPONENTS ---
+
+const DetailCard = props =>
+h("div", {class:"card mb-4"}, [
+  h("div", {class:"card-header"}, text("詳細")),
+  h("ul", {class:"list-group list-group-flush"}, [
+    h("li", {class:"list-group-item"}, [
+      h("div", {class:"row"}, [
+        h("b", {class:"col-sm-auto"}, text("症状：　　")),
+        h("div", {class:"col-sm"},text(props.symptoms)),
+      ]),
+    ]),
+    h("li", {class:"list-group-item"}, [
+      h("div", {class:"row"}, [
+        h("b", {class:"col-sm-auto"}, text("部位：　　")),
+        h("div", {class:"col-sm"},text(props.region)),
+      ]),
+    ]),
+    h("li", {class:"list-group-item"}, [
+      h("div", {class:"row"}, [
+        h("b", {class:"col-sm-auto"}, text("主な薬物：")),
+        h("div", {class:"col-sm"},text(props.crude_drags)),
+      ]),
+    ]),
+    h("li", {class:"list-group-item"}, [
+      h("div", {class:"row"}, [
+        h("b", {class:"col-sm-auto"}, text("方剤例：　")),
+        h("div", {class:"col-sm"},text(props.prescriptions)),
+      ]),
+    ]),
+    h("li", {class:"list-group-item"}, [
+      h("div", {class:"row"}, [
+        h("b", {class:"col-sm-auto"}, text("治療法：　")),
+        h("div", {class:"col-sm"},text(props.treatment)),
+      ]),
+    ]),
+  ]),
+])
+
 
 const ShoItem = props => 
   h("div", {class:"card mt-3"}, [
     h('div', {class:"card-body"}, [
       h("h2", {class:"card-title"}, text(props.name)),
       h("p", {class:"card-text"}, text(props.description)),
-      h("div", {class:"card mb-3"}, [
-        h("div", {class:"card-header"}, text("詳細")),
-        h("div", {class:"card-body"}, [
-          h("div", {class:"card-text"}, [
-            h("p", {}, [
-              h("b", {}, text("症状：")),
-              text(props.symptoms),
-            ]),
-            h("p", {}, [
-              h("b", {}, text("証が現れる部位：")),
-              text(props.region),
-            ]),
-            h("p", {}, [
-              h("b", {}, text("主な薬物：")),
-              text(props.crude_drags),
-            ]),
-            h("p", {}, [
-              h("b", {}, text("方剤例：")),
-              text(props.prescriptions),
-            ]),
-            h("p", {}, [
-              h("b", {}, text("治療法：")),
-              text(props.treatment),
-            ]),
-          ]),
-        ]),
-      ]),
-      h("p", {}, h("font", {color: "gray"}, text("出典： " + props.references)))
+      DetailCard(props),
+        h("footer", {class: "blockquote-footer mb-0"}, text("出典： " + props.references))
     ]),
   ])
 
 const SearchForm = props =>
 h("form", {onsubmit: preventDefault(FetchSearch), class:"row row-cols-2 g-1 align-items-center"}, [
-    h("div", {class:"col-11"}, [
-      h("input", {
-          class:"form-control",
-          oninput: targetValue(NewValue),
-          type: "search", 
-          placeholder: "症状を入力...",
-          autofocus: true,
-          required: true,
-      })
+    h("div", {class:"col-sm"}, [
+      h("div", {class:"input-group flex-nowrap"}, [
+        h("span", {class:"input-group-text"}, [
+          h("i",{class:"fas fa-search"})
+        ]),
+        h("input", {
+            class:"form-control",
+            oninput: targetValue(NewValue),
+            type: "search", 
+            placeholder: "症状を入力...",
+            autofocus: true,
+            required: true,
+        })
+      ]),
     ]),
-    h("div", {class:"col-1"}, [
-      h("input", {
+    h("div", {class:"col-sm-auto"}, [
+      h("button", {
         class:"btn btn-primary",
         type: "submit",
-        value: "検索",
-      })
+        disabled:props.fetching,
+      }, [
+        props.fetching ? 
+        h("div", {class:"spinner-border spinner-border-sm", role:"status"}):
+        h("i",{class:"fas fa-search"})
+      ])
     ])
 ])
 
@@ -102,11 +123,13 @@ const ShoList = props =>
   ])
 
 const view = state => 
-h("main", {class:"container"}, [
+h("div", {class:"container"}, [
   h("h1", {class:"m-3"}, text("証情報検索システム")),
   SearchForm(state),
-  state.fetching ? 
-    h("h1", {}, text("loading")) : 
+  state.fetching ?
+  h("div", {class:"d-flex justify-content-center"}, [
+    h("div", {class:"spinner-border m-5", role:"status"}) 
+  ]): 
     state.error ? 
       h("h1", {}, text(state.error)) : 
       state.sholist && ShoList(state)
@@ -117,5 +140,5 @@ h("main", {class:"container"}, [
 app({
   init: {value:"",sholist: [],fetching:false},
   view,
-  node: document.body,
+  node: document.getElementById("app"),
 })
