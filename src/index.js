@@ -18,7 +18,7 @@ const FetchSearch = state => [
     options: {
       method: "POST",
       body: JSON.stringify({
-        word: state.value
+        query: state.value
       })
     },
     action: (state, content) => ({ ...state, fetching: false, sholist: content, error:false}),
@@ -76,7 +76,8 @@ const ShoItem = props =>
   ])
 
 const SearchForm = props =>
-h("form", {onsubmit: preventDefault(FetchSearch), class:"row row-cols-2 g-1 align-items-center"}, [
+h("div", {class:"sticky-top"}, [
+  h("form", {onsubmit: preventDefault(FetchSearch), class:"row row-cols-2 g-1 align-items-center"}, [
     h("div", {class:"col-sm"}, [
       h("div", {class:"input-group flex-nowrap"}, [
         h("span", {class:"input-group-text"}, [
@@ -103,6 +104,7 @@ h("form", {onsubmit: preventDefault(FetchSearch), class:"row row-cols-2 g-1 alig
         h("i",{class:"fas fa-search"})
       ])
     ])
+  ])
 ])
 
 const ShoList = props =>
@@ -124,7 +126,9 @@ const ShoList = props =>
 
 const view = state => 
 h("div", {class:"container"}, [
-  h("h1", {class:"m-3"}, text("証情報検索システム")),
+  h("div", {}, [
+    h("h1", {class:"m-3"}, text("証情報検索システム"))
+  ]),
   SearchForm(state),
   state.fetching ?
   h("div", {class:"d-flex justify-content-center"}, [
