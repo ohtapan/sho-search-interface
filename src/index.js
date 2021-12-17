@@ -15,6 +15,7 @@ const FetchSearch = state => [
   {...state, fetching: true},
   Http({
     url: "https://y3vglivbe6.execute-api.ap-northeast-1.amazonaws.com/Prod/search",
+    //url: "http://127.0.0.1:3000/search",
     options: {
       method: "POST",
       body: JSON.stringify({
@@ -77,12 +78,10 @@ const ShoItem = props =>
 
 const SearchForm = props =>
 h("div", {class:"sticky-top"}, [
-  h("form", {onsubmit: preventDefault(FetchSearch), class:"row row-cols-2 g-1 align-items-center"}, [
+  h("form", {onsubmit: preventDefault(FetchSearch), class:"row row-cols-2 g-1 align-items-center has-search"}, [
     h("div", {class:"col-sm"}, [
-      h("div", {class:"input-group flex-nowrap"}, [
-        h("span", {class:"input-group-text"}, [
-          h("i",{class:"fas fa-search"})
-        ]),
+      h("div", {class:"flex-nowrap"}, [
+        h("i",{class:"fas fa-search form-control-feedback"}),
         h("input", {
             class:"form-control",
             oninput: targetValue(NewValue),
@@ -99,9 +98,7 @@ h("div", {class:"sticky-top"}, [
         type: "submit",
         disabled:props.fetching,
       }, [
-        props.fetching ? 
-        h("div", {class:"spinner-border spinner-border-sm", role:"status"}):
-        h("i",{class:"fas fa-search"})
+        text("検索")
       ])
     ])
   ])
